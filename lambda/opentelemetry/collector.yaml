@@ -1,0 +1,40 @@
+#collector.yaml in the root directory
+#Set an environment variable 'OPENTELEMETRY_COLLECTOR_CONFIG_FILE' with value '/var/task/opentelemetry/collector.yaml'
+#Set an environment variable 'LIGHTSTEP_ACCESS_TOKEN' with your token value
+
+# Only OTLP receiver is allowed as of ADOT 1.0.1 (28/04/2022)
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+# No processors are allowed as of ADOT 1.0.1 (28/04/2022)
+processors:
+#  NOT WORKING
+#  batch/traces:
+#    timeout: 1s
+#    send_batch_size: 10
+
+# Only logging, awsxray and otlp exporters are allowed as of ADOT 1.0.1 (28/04/2022)
+exporters:
+  logging:
+    loglevel: debug
+  awsxray:
+  # configuring otlp to Lightstep public satellites
+  otlp/lightstep:
+    endpoint: ingest.lightstep.com:443
+    headers:
+      "lightstep-access-token": "${LIGHTSTEP_ACCESS_TOKEN}"
+
+#enables output for traces to lightstep
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: []
+      exporters: [logging, awsxray, otlp/lightstep]
+    metrics:
+      receivers: [otlp]
+      processors: []
+      exporters: [logging, otlp/lightstep]
