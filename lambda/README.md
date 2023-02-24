@@ -106,7 +106,7 @@ const api = require('@opentelemetry/api');
   // add an attribute
   activeSpan.setAttribute('value1', event.key1);
   // log an event and include some structured data.
-  activeSpan.addEvent('Received event:' + JSON.stringify(event, null, 2));    
+  activeSpan.addEvent('This is my test log event');    
 ```
 
   - TO TEST: you can also create a span to trace a specific function and no trace is auto instrumented for it
