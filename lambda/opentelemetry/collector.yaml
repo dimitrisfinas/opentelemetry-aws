@@ -34,7 +34,3 @@ service:
       receivers: [otlp]
       processors: []
       exporters: [logging, awsxray, otlp/lightstep]
-    metrics:
-      receivers: [otlp]
-      processors: []
-      exporters: [logging, otlp/lightstep]
