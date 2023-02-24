@@ -17,8 +17,10 @@ This is instructions to use OpenTelemetry in the context of AWS Lambda serverles
 
 - Follow instructions on this page https://aws-otel.github.io/docs/getting-started/lambda/lambda-js to add tracing layer to your function
 
-  - Add layer
-  ```arn:aws:lambda:us-east-1:901920570463:layer:aws-otel-nodejs-amd64-ver-1-9-1:1```
+  - Add layer:
+  ```
+  arn:aws:lambda:us-east-1:901920570463:layer:aws-otel-nodejs-amd64-ver-1-9-1:1
+  ```
 
   - Go to configuration/monitoring of your function and enable tracing
     - accept to add required permissions to your role to enable tracing
@@ -35,7 +37,7 @@ This is instructions to use OpenTelemetry in the context of AWS Lambda serverles
   - add a collector config file to your project like `/opentelemetry/collector.yaml`
 
   - update you collector config file to add a new backend (here `otlp/lightstep`)
-```
+```yaml
 #collector.yaml in the any directory below your src root directory
 receivers:
   otlp:
@@ -93,12 +95,12 @@ service:
 ```  
 
   - define a global const above your function code
-```
+```java
 const api = require('@opentelemetry/api');
 ```
 
   - use sample of code below to add attributes or log events
-```
+```java
   // access the current span from active context
   let activeSpan = api.trace.getSpan(api.context.active());
   // add an attribute
@@ -109,12 +111,12 @@ const api = require('@opentelemetry/api');
 
   - TO TEST: you can also create a span to trace a specific function and no trace is auto instrumented for it
     - define a global const above your function code
-```
+```java
 const tracer = require('XXX');
 ```
 
     - add code below to create span
-  ```
+  ```java
     // access the current span from active context
     let activeSpan = api.trace.getSpan(api.context.active());
     // check if it exists (sometimes, there is no span for this context)
@@ -133,7 +135,6 @@ const tracer = require('XXX');
 
     // don't forget to end it so that
     if (manual_span) { activeSpan.end(); };
-
   ```
 
 
