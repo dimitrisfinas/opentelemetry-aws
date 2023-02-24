@@ -17,7 +17,8 @@ This is instructions to use OpenTelemetry in the context of AWS Lambda serverles
 
 - Follow instructions on this page https://aws-otel.github.io/docs/getting-started/lambda/lambda-js to add tracing layer to your function
 
-  - Add layer :`arn:aws:lambda:us-east-1:901920570463:layer:aws-otel-nodejs-amd64-ver-1-9-1:1`
+  - Add layer
+  ```arn:aws:lambda:us-east-1:901920570463:layer:aws-otel-nodejs-amd64-ver-1-9-1:1```
 
   - Go to configuration/monitoring of your function and enable tracing
     - accept to add required permissions to your role to enable tracing
