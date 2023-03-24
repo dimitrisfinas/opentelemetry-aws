@@ -19,6 +19,10 @@ This is instructions to use OpenTelemetry in the context of AWS Lambda serverles
 
   - Add layer:
   ```
+  arn:aws:lambda:<REGION>:901920570463:layer:aws-otel-nodejs-<ARCHITECTURE>-ver-1-9-1:1
+  ```
+      - example:
+  ```
   arn:aws:lambda:us-east-1:901920570463:layer:aws-otel-nodejs-amd64-ver-1-9-1:1
   ```
 
@@ -43,12 +47,16 @@ receivers:
   otlp:
     protocols:
       grpc:
+        endpoint: localhost:4317
       http:
+        endpoint: localhost:4318
 
 exporters:
   logging:
     loglevel: debug
+
   awsxray:
+
   # configuring otlp to Lightstep public satellites
   otlp/lightstep:
     endpoint: ingest.lightstep.com:443
@@ -59,7 +67,7 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [logging, awsxray, otlp/lightstep]
+      exporters: [logging, otlp/lightstep]
 ```
 
   - the AWS Otel collector (ADOT) has a lot of limitations (as of v1.0.1 of 29/04/2022)
@@ -160,6 +168,14 @@ const tracer = require('XXX');
   => Even if auto-instrumented, some functions may not have any active span
   => Then, you will have to create your own ones if this is the case
   => After retrieving active span, test if not empty: use startSpan() if it is the case and don't forget to use span.end() at the end of your function
+
+- error `403: can't connect to lightstep`
+  => the yaml file may be corrupted if you copy/paste it from web page, I recommend to paste it first to a notepad or text editor before pasting it in your function to check spaces/indentation are correct.
+
+- error `require is not defined in ES module scope, you can use import instead`
+    - this is because you use `const api = require('@opentelemetry/api');` in a javascript module file (with extension `.mjs`)
+    - replace it with
+    - or change extension of your file to `.js`
 
 - error `XXX` when not having library the `package.json` file
   => Add required library in dependencies section of your package.json file
